@@ -1,0 +1,23 @@
+name: latest-file-edit-timestamp-action
+description: Get latest timestamp as epoch of a file is edited in a git repository
+inputs:
+  file:
+    description: Name of the file in a Git Repository
+    required: true
+outputs:
+  timestamp:
+    description: Latest edit timestamp
+    value: ${{ steps.find-latest-edit-timestamp.outputs.timestamp }}
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      id: find-latest-edit-timestamp
+      run: |
+        latest-edit-timestamp() {
+            BASE=`pwd` && FILE=`basename ${{ inputs.file }}` && cd `dirname ${{ inputs.file }}` && \
+            echo "$(git log -1 --pretty="format:%ct" $FILE)" && cd $BASE
+        }
+        LATEST_TIMESTAMP=`latest-edit-timestamp ${{ inputs.file }}`
+        echo "The latest file edit timestamp for ${{ inputs.file }} is $LATEST_TIMESTAMP"
+        echo "::set-output name=timestamp::${LATEST_TIMESTAMP}"
