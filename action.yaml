@@ -20,4 +20,4 @@ runs:
         }
         LATEST_TIMESTAMP=`latest-edit-timestamp ${{ inputs.file }}`
         echo "The latest file edit timestamp for ${{ inputs.file }} is $LATEST_TIMESTAMP"
-        echo "::set-output name=timestamp::${LATEST_TIMESTAMP}"
+        echo "timestamp=${LATEST_TIMESTAMP}" >> $GITHUB_OUTPUT
